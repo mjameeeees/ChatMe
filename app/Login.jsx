@@ -1,5 +1,7 @@
-import React from "react";
-import Chat from './Chat';
+import React, { useEffect, useState } from "react";
+import { initializeApp } from "firebase/app";
+
+import { getAuth , signInWithEmailAndPassword } from "firebase/auth";
 import {
   View,
   Text,
@@ -11,9 +13,32 @@ import {
 
 function Login({navigation}) {
 
-
   const chat = () => {
     navigation.navigate('Chat');
+  }
+
+  const [user , setUser] = useState('');
+  const [password , setPassword] = useState('');
+
+
+
+  const userInput = () =>{
+    const auth = getAuth();
+    signInWithEmailAndPassword(auth, user, password)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        // ...
+        navigation.navigate('Chat');
+      })
+      .catch((error) => {
+        console.log('Errors: ', error)
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
+
+    console.log('User:' ,user)
+    console.log('Password:' ,password)
   }
 
   return (
@@ -23,16 +48,21 @@ function Login({navigation}) {
           <View style={Style.inputContainer}>
             <View style={Style.input}>
               <Text style={Style.text}>User ID</Text>
-              <TextInput style={Style.textInput}/>
+              <TextInput
+              onChangeText={usr => setUser(usr)}
+              value={user}
+              style={Style.textInput}/>
             </View>
             <View style={Style.input}>
               <Text style={Style.text}>Password</Text>
               <TextInput 
               style={Style.textInput}
+              onChangeText={pass => setPassword(pass)}
+              value={password}
               secureTextEntry={true}
               />
             </View>
-            <TouchableOpacity style={Style.login} onPress={chat}>
+            <TouchableOpacity style={Style.login} onPress={userInput}>
             <Text style={{textAlign: "center"}}>Login</Text>
           </TouchableOpacity>
           </View>
