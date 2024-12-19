@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { app , analytics } from "../firebaseConfig";
 
-import { getAuth , signInWithEmailAndPassword } from "firebase/auth";
 import {
   View,
   Text,
@@ -13,32 +14,24 @@ import {
 
 function Login({navigation}) {
 
-  const chat = () => {
-    navigation.navigate('Chat');
-  }
+  const [user , setUser] = useState();
+  const [password , setPassword] = useState();
 
-  const [user , setUser] = useState('');
-  const [password , setPassword] = useState('');
-
-
-
+ 
+ 
   const userInput = () =>{
-    const auth = getAuth();
+    const auth = getAuth(app)
     signInWithEmailAndPassword(auth, user, password)
       .then((userCredential) => {
         // Signed in 
         const user = userCredential.user;
-        // ...
-        navigation.navigate('Chat');
+        navigation.navigate('Chat')
       })
       .catch((error) => {
-        console.log('Errors: ', error)
         const errorCode = error.code;
         const errorMessage = error.message;
+        alert('Incorrect Email/Password')
       });
-
-    console.log('User:' ,user)
-    console.log('Password:' ,password)
   }
 
   return (
