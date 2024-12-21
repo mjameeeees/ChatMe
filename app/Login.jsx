@@ -17,8 +17,6 @@ function Login({navigation}) {
   const [user , setUser] = useState();
   const [password , setPassword] = useState();
 
- 
- 
   const userInput = () =>{
     const auth = getAuth(app)
     signInWithEmailAndPassword(auth, user, password)
